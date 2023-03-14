@@ -1,4 +1,5 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, abort
+from models.dal import db
 
 
 app = Flask(__name__)
@@ -10,3 +11,20 @@ def welcome():
         "welcome.html",
         message="Here's message from the view",
     )
+
+
+@app.route("/card/<int:index>")
+def card_view(index):
+    try:
+        card = db[index]
+
+        return render_template(
+            "card.html",
+            card=card,
+            index=index
+        )
+    except IndexError:
+        abort(404)
+
+
+
